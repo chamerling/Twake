@@ -1,5 +1,5 @@
 import WebServerAPI from "../webserver/provider";
-import { TwakeService, Prefix, Consumes } from "../../core/platform/framework";
+import { TwakeService, Prefix, Consumes, EventBus } from "../../core/platform/framework";
 import ChannelServiceAPI from "./provider";
 import * as services from "./services";
 import web from "./web/index";
