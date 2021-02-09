@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Badge } from 'antd';
+import { Avatar, Badge, Tooltip } from 'antd';
 import { User } from 'react-feather';
 
 import { UserType } from 'app/models/User';
@@ -29,10 +29,16 @@ export const useUsersListener = (usersIds: string[]) => {
 };
 
 export const getUserParts = (props: {
+  // array of user ids to render
   usersIds: string[];
+  // should we display the current user
   keepMyself?: boolean;
+  // maximum number of users to render
   max?: number;
+  // size of the avatars
   size?: number;
+  // display the name of each user in a tooltip?
+  displayName?: boolean;
 }): { avatar: JSX.Element; name: string; users: UserType[] } => {
   let channelMembers = (props.usersIds || []).filter(
     e =>
@@ -52,12 +58,19 @@ export const getUserParts = (props: {
   channelMembers?.map(userId => users.push(OldCollections.get('users').find(userId)));
 
   if (channelMembers?.length === 1) {
+    const displayName = UserService.getFullName(users[0]);
+    const avatarElement = (<Avatar size={props.size || 20} src={UserService.getThumbnail(users[0])} />);
     avatar = (
       <Badge count={0} size="default" dot offset={[-4, 16]}>
-        <Avatar size={props.size || 20} src={UserService.getThumbnail(users[0])} />
+        { props.displayName ?
+          <Tooltip title={displayName} placement="bottom">
+            { avatarElement }
+          </Tooltip>
+        : avatarElement
+        }
       </Badge>
     );
-    channelName = [UserService.getFullName(users[0])];
+    channelName = [displayName];
   } else if (channelMembers?.length || 0 > 1) {
     avatar = (
       <Avatar.Group
@@ -72,15 +85,15 @@ export const getUserParts = (props: {
         }}
       >
         {users.map(member => {
-          channelName.push(UserService.getFullName(member));
-          return (
-            member && (
-              <Avatar
-                key={member.id}
-                size={props.size || 20}
-                src={UserService.getThumbnail(member)}
-              />
-            )
+          const displayName = UserService.getFullName(member);
+          const avatarElement = <Avatar key={member.id} size={props.size || 20} src={UserService.getThumbnail(member)} />;
+          channelName.push(displayName);
+          return member && (
+            props.displayName ?
+              <Tooltip title={displayName} placement="bottom">
+                { avatarElement }
+              </Tooltip>
+            : avatarElement
           );
         })}
       </Avatar.Group>
