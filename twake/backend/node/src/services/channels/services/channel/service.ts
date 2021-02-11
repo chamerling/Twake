@@ -42,10 +42,12 @@ import {
 } from "../../../../core/platform/services/pubsub/decorators/publish";
 import _ from "lodash";
 import { localEventBus } from "../../../../core/platform/framework/pubsub";
+import { ChannelCounter } from "../../entities/channel-counter";
 
 export class Service implements ChannelService {
   version: "1";
   activityRepository: Repository<ChannelActivity>;
+  channelCountersRepository: Repository<ChannelCounter>;
 
   constructor(
     private service: ChannelService,
