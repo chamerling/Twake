@@ -1,3 +1,4 @@
+import { merge } from "lodash";
 import { Column, Entity } from "../../../core/platform/services/database/services/orm/decorators";
 
 // backward compatibility with PHP where companies used to be `group_entity`
@@ -13,22 +14,22 @@ export default class Company {
 
   @Column("name", "string")
   name: string;
-  
+
   @Column("display_name", "encoded_string")
   displayName: string;
-  
+
   @Column("logo_id", "uuid")
   lofo: string;
-  
+
   @Column("plan", "encoded_string")
   plan: string;
-  
+
   @Column("workspaces_id", "encoded_json")
   workspaces: Array<string>;
 
   @Column("managers_id", "encoded_json")
   managers: Array<string>;
-  
+
   @Column("date_added", "number")
   dateAdded: number;
 
@@ -37,7 +38,7 @@ export default class Company {
 
   @Column("is_blocked", "boolean")
   isBlocked: boolean;
-  
+
   @Column("is_private", "boolean")
   isPrivate: boolean;
 
@@ -46,3 +47,7 @@ export default class Company {
 }
 
 export type CompanyPrimaryKey = Pick<Company, "id">;
+
+export function getInstance(company: Partial<Company> & CompanyPrimaryKey): Company {
+  return merge(new Company(), company);
+}
