@@ -1,5 +1,4 @@
 import { UserType } from "app/models/User";
-import resolve from "resolve";
 import Api from "../Api";
 import { TwakeService } from "../Decorators/TwakeService";
 
